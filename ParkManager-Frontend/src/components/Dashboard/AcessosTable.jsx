@@ -39,7 +39,7 @@ export default function AcessosTable({ data, limit = 3 }) {
                             .getElementById('create-acesso-modal')
                             .showModal()
                     }
-                    className="flex flex-row justify-between items-center px-4 hover:cursor-pointer rounded-lg text-base text-dashboard-create-button-text bg-dashboard-create-button hover:bg-dashboard-create-button/85 font-bold w-[230px] h-[39px]"
+                    className="flex flex-row justify-between items-center px-4 hover:cursor-pointer rounded-lg text-base text-dashboard-create-button-text bg-dashboard-create-button hover:bg-dashboard-create-button/85 font-bold w-[205px] h-[39px]"
                 >
                     <FaCirclePlus className="w-4 h-4 text-dashboard-create-button-text" />
                     <p>REALIZAR ACESSO</p>

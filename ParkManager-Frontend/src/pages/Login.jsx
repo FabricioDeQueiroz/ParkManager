@@ -40,7 +40,62 @@ const Login = () => {
                 <>
                     <div className="bg-gradient-to-b from-background-escuro to-background-claro flex flex-col h-screen w-screen">
                         <Navbar />
-                        <div className="my-auto w-[452px] rounded-[20px] bg-background-login mx-auto self-center p-9">
+                        <div className="px-16 pt-20 leading-relaxed space-y-2 text-justify">
+                            <p className="font-bold text-lg">
+                                Projeto Acadêmico
+                            </p>
+
+                            <p>
+                                Esta plataforma é um projeto acadêmico e tem
+                                como objetivo demonstrar, de forma prática, a
+                                aplicação de conceitos de engenharia de
+                                software, desenvolvimento web e arquitetura de
+                                sistemas. Algumas funcionalidades podem estar
+                                incompletas.
+                            </p>
+
+                            <p>
+                                Para uma melhor experiência, recomenda-se a
+                                criação de dois tipos de conta:
+                                <span className="font-bold text-card-dashboard-text">
+                                    {' '}
+                                    Gerente
+                                </span>{' '}
+                                e
+                                <span className="font-bold text-card-dashboard-text">
+                                    {' '}
+                                    Cliente
+                                </span>
+                                . Dessa forma, é possível explorar todas as
+                                funcionalidades do sistema, incluindo o
+                                gerenciamento de estacionamentos, registro de
+                                acessos e a visualização dos dados.
+                            </p>
+
+                            <p>
+                                Caso deseje testar o envio de relatórios por
+                                e-mail, utilize um endereço de e-mail válido ao
+                                criar a conta de
+                                <span className="font-bold text-card-dashboard-text">
+                                    {' '}
+                                    Gerente
+                                </span>
+                                . O sistema está configurado para enviar
+                                relatórios dos estacionamentos, automaticamente
+                                às 17:00 (Horário de Brasília), para o e-mail do
+                                gerente cadastrado, permitindo validar o
+                                funcionamento dessa funcionalidade.
+                            </p>
+
+                            <p className="text-placeholder-login italic font-bold">
+                                Este ambiente é destinado exclusivamente para
+                                fins de teste, validação e apresentação do
+                                projeto. Os dados inseridos podem ser apagados
+                                ou redefinidos a qualquer momento.
+                            </p>
+                        </div>
+
+                        <div className="my-16 w-[452px] rounded-[20px] bg-background-login mx-auto self-center p-9">
                             <form
                                 className="flex flex-col"
                                 onSubmit={handleLogin}

@@ -1,17 +1,17 @@
 # Makefile ParkManager
-all: 
+all:
 	@echo "Use um comando válido"
 
 docker:
 	docker compose -p parkmanager down
 # 	docker volume rm parkmanager_postgres_data
-	docker-compose -p parkmanager up --build
+	docker compose -p parkmanager up --build
 
 docker-down:
 	docker compose -p parkmanager down
 
 docker-up:
-	docker-compose -p parkmanager up
+	docker compose -p parkmanager up
 
 docker-build:
 	docker-compose -p parkmanager up --build
