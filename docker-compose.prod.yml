@@ -23,7 +23,7 @@ services:
       args:
         BUILD_CONFIGURATION: Release
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - DB_HOST=parkmanager-postgres-prod
