@@ -1,12 +1,5 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.6 AS base
-WORKDIR /app
-EXPOSE 8080
-
 FROM mcr.microsoft.com/dotnet/sdk:9.0.301 AS build
-ARG BUILD_CONFIGURATION=Debug
-
-RUN dotnet tool install --global dotnet-ef --version 9.0.6
-ENV PATH="${PATH}:/root/.dotnet/tools"
+ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 
@@ -14,8 +7,22 @@ COPY ["ParkManager-Service/ParkManager-Service.csproj", "ParkManager-Service/"]
 RUN dotnet restore "ParkManager-Service/ParkManager-Service.csproj"
 
 COPY . .
-WORKDIR "/src/ParkManager-Service/"
+WORKDIR "/src/ParkManager-Service"
 
-RUN chmod +x "entrypoint.sh"
+RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish
 
-ENTRYPOINT ["/bin/bash", "entrypoint.sh"]
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.6 AS runtime
+
+WORKDIR /app
+
+RUN dotnet tool install --global dotnet-ef --version 9.0.6
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+COPY --from=build /app/publish .
+
+COPY ParkManager-Service/entrypoint.sh .
+RUN chmod +x entrypoint.sh
+
+EXPOSE 8080
+
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
