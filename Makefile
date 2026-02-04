@@ -11,7 +11,7 @@ docker-down:
 	docker compose -p parkmanager down
 
 docker-up:
-	docker-compose -p parkmanager up
+	docker compose -p parkmanager up
 
 docker-build:
 	docker-compose -p parkmanager up --build

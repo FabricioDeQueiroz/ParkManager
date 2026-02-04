@@ -6,10 +6,20 @@ import useGetEstacionamentos from '../../Hooks/GetEstacionamentos';
 import { showToast } from '../Feedback/ToastNotify';
 
 const CreateAcessoModal = () => {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
     const [formData, setFormData] = useState({
         placaVeiculo: '',
         idEstacionamento: '',
     });
+
+    const resetForm = () => {
+        setFormData({
+            placaVeiculo: '',
+            idEstacionamento: '',
+        });
+        setDropdownOpen(false);
+    };
 
     const { estacionamentos } = useGetEstacionamentos();
 
@@ -53,9 +63,12 @@ const CreateAcessoModal = () => {
 
     return (
         <dialog id="create-acesso-modal" className="modal">
-            <div className="modal-box bg-background-card-dashboard w-[520px] rounded-[10px] shadow-xl p-8 relative">
+            <div className="modal-box bg-background-card-dashboard w-[520px] rounded-[10px] shadow-xl p-8 relative overflow-visible">
                 <form method="dialog">
-                    <button className="absolute top-4 right-4 text-2xl text-card-dashboard-text">
+                    <button
+                        onClick={resetForm}
+                        className="absolute top-4 right-4 text-2xl text-card-dashboard-text"
+                    >
                         ✕
                     </button>
                 </form>
@@ -75,30 +88,60 @@ const CreateAcessoModal = () => {
                         className="transition duration-300 hover:border-field-border-active hover:ring-1 h-12 w-full pr-4 rounded-lg border border-field-login bg-field-border-login px-4 py-2 text-sm text-texto-login placeholder-placeholder-login focus:outline-none focus:ring-1 focus:ring-field-border-active focus:bg-field-border-login focus:border-field-border-active"
                     />
 
-                    <select
-                        required
-                        name="idEstacionamento"
-                        value={formData.idEstacionamento}
-                        onChange={handleChange}
-                        className="transition duration-300 h-12 w-full pr-4 rounded-lg border border-field-login bg-field-border-login px-4 py-2 text-sm text-texto-login focus:outline-none focus:ring-1 focus:ring-field-border-active focus:bg-field-border-login focus:border-field-border-active"
-                    >
-                        <option
-                            value=""
-                            disabled
-                            className="text-gray-400 bg-white hover:bg-gray-100"
+                    <div className="relative z-50">
+                        <button
+                            type="button"
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            className="transition duration-300 h-12 w-full pr-4 rounded-lg border border-field-login bg-field-border-login px-4 py-2 text-sm text-texto-login flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-field-border-active focus:bg-field-border-login focus:border-field-border-active"
                         >
-                            Selecione um estacionamento
-                        </option>
-                        {estacionamentos.map((est) => (
-                            <option
-                                key={est.idEstacionamento}
-                                value={est.idEstacionamento}
-                                className="text-black bg-white hover:bg-gray-100 cursor-pointer"
+                            <span>
+                                {formData.idEstacionamento
+                                    ? estacionamentos.find(
+                                          (e) =>
+                                              e.idEstacionamento ===
+                                              formData.idEstacionamento
+                                      )?.nome
+                                    : 'Selecione um estacionamento'}
+                            </span>
+
+                            <svg
+                                className={`w-4 h-4 transition-transform ${
+                                    dropdownOpen ? 'rotate-180' : ''
+                                }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                             >
-                                {est.nome}
-                            </option>
-                        ))}
-                    </select>
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M19 9l-7 7-7-7"
+                                />
+                            </svg>
+                        </button>
+
+                        {dropdownOpen && (
+                            <div className="absolute z-[9999] mt-2 w-full rounded-lg border border-field-login bg-field-border-login shadow-lg overflow-y-auto overflow-x-hidden max-h-60">
+                                {estacionamentos.map((est) => (
+                                    <div
+                                        key={est.idEstacionamento}
+                                        onClick={() => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                idEstacionamento:
+                                                    est.idEstacionamento,
+                                            }));
+                                            setDropdownOpen(false);
+                                        }}
+                                        className="px-4 py-3 text-sm cursor-pointer text-texto-login hover:bg-field-border-active hover:text-white transition"
+                                    >
+                                        {est.nome}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 <button

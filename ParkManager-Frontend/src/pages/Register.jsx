@@ -71,9 +71,16 @@ const Register = () => {
                                 />
 
                                 <p className="text-sm text-placeholder-login mb-8 mx-1">
-                                    Seja bem-vindo! Complete as informações a
-                                    seguir para concluir seu cadastro como{' '}
-                                    {role == 0 ? 'gerente' : 'cliente'}.
+                                    {role == null ? (
+                                        ''
+                                    ) : (
+                                        <>
+                                            Seja bem-vindo! Complete as
+                                            informações a seguir para concluir
+                                            seu cadastro como{' '}
+                                            {role == 0 ? 'gerente' : 'cliente'}.
+                                        </>
+                                    )}
                                 </p>
 
                                 <div className="gap-y-6 flex flex-col mb-2">
