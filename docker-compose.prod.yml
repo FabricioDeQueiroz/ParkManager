@@ -38,7 +38,7 @@ services:
       parkmanager-postgres-prod:
         condition: service_healthy
     volumes:
-      - ./ParkManager-Service:/src
+      - ./ParkManager-Service:/src/ParkManager-Service
       - ~/.nuget/packages:/root/.nuget/packages:ro
       - ./data-protection-keys:/root/.aspnet/DataProtection-Keys
     restart: always
