@@ -214,7 +214,7 @@ else
     }
 }
 
-// Aqui mudaria a periodicidade do envio de e-mails, está a cada 5 minutos
+// Envio de e-mail todos os dias as 20h (UTC), para fins de demonstração
 if (!builder.Environment.IsEnvironment("Test"))
 {
     using (var scope = app.Services.CreateScope())
@@ -224,7 +224,7 @@ if (!builder.Environment.IsEnvironment("Test"))
         recurringJobManager.AddOrUpdate<IEmail>(
             "Envio-Relatorio-Mensal",
             service => service.SendMailAsync(),
-            "*/59 * * * *",
+            "0 20 * * *",
             new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc }
         );
     }

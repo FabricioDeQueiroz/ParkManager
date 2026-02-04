@@ -208,6 +208,12 @@ namespace ParkManager_Service.Services
 
                             <hr>
 
+                            <div style='background:#FDECEA; color:#611A15; padding:14px; border-radius:6px; font-size:14px;'>
+                                <strong>Aviso:</strong> Este e-mail foi enviado como parte de um projeto acadêmico para fins de estudo e demonstração técnica.
+                            </div>
+
+                            <br>
+
                             <h2 style='color: #2E86C1;'>Olá, {nomeGerente}!</h2>
                             <p class='message'>Esperamos que esteja tudo bem. Segue abaixo o seu relatório financeiro detalhado referente ao mês anterior, com os valores totais apurados e o valor devido a cada contratante.</p>
                             <p class='message'>Este relatório é gerado no primeiro dia de cada mês para auxiliar no seu controle financeiro.</p>
