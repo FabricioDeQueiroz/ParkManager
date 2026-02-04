@@ -3,14 +3,16 @@ ARG BUILD_CONFIGURATION=Release
 
 WORKDIR /src
 
-RUN dotnet tool install --global dotnet-ef --version 9.0.6
-ENV PATH="${PATH}:/root/.dotnet/tools"
-
 COPY ["ParkManager-Service/ParkManager-Service.csproj", "ParkManager-Service/"]
-RUN dotnet restore "ParkManager-Service/ParkManager-Service.csproj"
+COPY ["ParkManager-Service/.config/dotnet-tools.json", "ParkManager-Service/.config/"]
+
+WORKDIR /src/ParkManager-Service
+
+RUN dotnet tool restore
+
+RUN dotnet restore "ParkManager-Service.csproj"
 
 COPY . .
-WORKDIR "/src/ParkManager-Service"
 
 RUN dotnet ef database update
 RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish
