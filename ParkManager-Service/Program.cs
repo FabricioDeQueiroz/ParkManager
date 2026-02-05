@@ -135,6 +135,14 @@ if (!builder.Environment.IsEnvironment("Test"))
 
 var app = builder.Build();
 
+// Migrations direto no Program.cs
+if (!app.Environment.IsEnvironment("Test"))
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseStaticFiles();

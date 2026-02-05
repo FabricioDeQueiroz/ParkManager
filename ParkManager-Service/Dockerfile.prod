@@ -1,28 +1,23 @@
+FROM mcr.microsoft.com/dotnet/aspnet:9.0.6 AS base
+WORKDIR /app
+EXPOSE 8000
+
 FROM mcr.microsoft.com/dotnet/sdk:9.0.301 AS build
 ARG BUILD_CONFIGURATION=Release
-
 WORKDIR /src
 
 COPY ["ParkManager-Service/ParkManager-Service.csproj", "ParkManager-Service/"]
-COPY ["ParkManager-Service/.config/dotnet-tools.json", "ParkManager-Service/.config/"]
-
-WORKDIR /src/ParkManager-Service
-
-RUN dotnet tool restore
-
-RUN dotnet restore "ParkManager-Service.csproj"
+RUN dotnet restore "ParkManager-Service/ParkManager-Service.csproj"
 
 COPY . .
+WORKDIR "/src/ParkManager-Service"
+RUN dotnet build "ParkManager-Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-RUN dotnet ef database update
-RUN dotnet publish -c $BUILD_CONFIGURATION -o /app/publish
+FROM build AS publish
+RUN dotnet publish "ParkManager-Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/aspnet:9.0.6 AS runtime
-
+FROM base AS final
 WORKDIR /app
-
-COPY --from=build /app/publish .
-
-EXPOSE 8080
+COPY --from=publish /app/publish .
 
 ENTRYPOINT ["dotnet", "ParkManager-Service.dll"]
