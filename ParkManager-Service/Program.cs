@@ -143,34 +143,18 @@ if (!app.Environment.IsEnvironment("Test"))
     db.Database.Migrate();
 }
 
-if (app.Environment.IsDevelopment())
+app.UseStaticFiles();
+
+app.UseSwagger(c =>
 {
-    app.UseStaticFiles();
+    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+});
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ParkManager v1");
-        c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
-    });
-}
-else
+app.UseSwaggerUI(c =>
 {
-    app.UsePathBase("/parkmanager-api");
-    app.UseStaticFiles();
-
-    app.UseSwagger(c =>
-    {
-        c.RouteTemplate = "swagger/{documentName}/swagger.json";
-    });
-
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/parkmanager-api/swagger/v1/swagger.json", "ParkManager v1");
-        c.RoutePrefix = "swagger";
-        c.InjectStylesheet("/parkmanager-api/swagger-ui/SwaggerDark.css");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ParkManager v1");
+    c.InjectStylesheet("/swagger-ui/SwaggerDark.css");
+});
 
 app.UseCors("AllowMultipleOrigins");
 
@@ -183,59 +167,32 @@ app.UseRequestLocalization(new RequestLocalizationOptions
 });
 
 app.UseRouting();
-
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-// Aplicando migrações automaticamente em produção:
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsEnvironment("Test"))
 {
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
-if (app.Environment.IsDevelopment())
-{
-    if (!app.Environment.IsEnvironment("Test"))
+    app.UseHangfireDashboard("/hangfire", new DashboardOptions
     {
-        app.UseHangfireDashboard("/hangfire",
-            new DashboardOptions
-            {
-                Authorization = new[] { new AllowAllDashboardAuthorizationFilter() }
-            }
-        );
-    }
-}
-else
-{
-    if (!app.Environment.IsEnvironment("Test"))
-    {
-        app.UseHangfireDashboard("/parkmanager-api/hangfire",
-            new DashboardOptions
-            {
-                Authorization = new[] { new AllowAllDashboardAuthorizationFilter() }
-            }
-        );
-    }
+        Authorization = new[] { new AllowAllDashboardAuthorizationFilter() }
+    });
 }
 
 // Envio de e-mail todos os dias as 20h (UTC), para fins de demonstração
-if (!builder.Environment.IsEnvironment("Test"))
+if (!app.Environment.IsEnvironment("Test"))
 {
-    using (var scope = app.Services.CreateScope())
-    {
-        var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    using var scope = app.Services.CreateScope();
 
-        recurringJobManager.AddOrUpdate<IEmail>(
-            "Envio-Relatorio-Mensal",
-            service => service.SendMailAsync(),
-            "0 20 * * *",
-            new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc }
-        );
-    }
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+
+    recurringJobManager.AddOrUpdate<IEmail>(
+        "Envio-Relatorio-Mensal",
+        service => service.SendMailAsync(),
+        "0 20 * * *",
+        new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc }
+    );
 }
 
 app.Run();
