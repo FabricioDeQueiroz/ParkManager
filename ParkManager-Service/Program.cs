@@ -190,7 +190,7 @@ if (!app.Environment.IsEnvironment("Test"))
     recurringJobManager.AddOrUpdate<IEmail>(
         "Envio-Relatorio-Mensal",
         service => service.SendMailAsync(),
-        "0 20 * * *",
+        "0 0 1 * *",
         new RecurringJobOptions { TimeZone = TimeZoneInfo.Utc }
     );
 }
